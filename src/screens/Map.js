@@ -32,7 +32,19 @@ export const Map = () => {
         console.log(fetched['hydra:member'][1]) // Getting single ship example
         console.log(fetched['hydra:member'][1]['name']) // Getting Name Example
         console.log(fetched['hydra:member'][1]['@id'].slice(11, 15)) // Getting of ID example
-        // console.log(data2)
+        console.log(fetched)
+
+        const arr = []
+
+        function getIds(item, index) {
+          console.log(index, ":", item) 
+          console.log(`${index} id:`, item['@id'].slice(11, 15)) 
+          arr.push(item['@id'].slice(11, 15))
+        }
+        
+        fetched['hydra:member'].forEach(getIds)
+        console.log('All Ids:', arr)
+        
       } catch (e) {
         console.log('Error:', e)
       }
@@ -40,7 +52,7 @@ export const Map = () => {
 
     useEffect(() => {
       fetchLinks()
-      console.log(data2)
+      // console.log(data2)
     }, [fetchLinks])
 
     const hereCredentials = {
