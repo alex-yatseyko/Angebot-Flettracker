@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { useAuth } from './hooks/auth.hook'
 import { AuthContext } from './context/AuthContext'
+import { ShipContext } from './context/ShipContext'
 
 import { BottomNavigation } from './components/BottomNavigation'
 import './App.css';
@@ -18,12 +19,16 @@ function App() {
     <AuthContext.Provider value={{
       token, login, logout, refresh_token, isAuthenticated
     }}>
-      <Router>
-        <div   className="App">
-          { isAuthenticated && <BottomNavigation />}
-            { routes }
-        </div>
-      </Router>
+      <ShipContext.Provider value={{
+        // ships
+      }}>
+        <Router>
+          <div className="App">
+            { isAuthenticated && <BottomNavigation />}
+              { routes }
+          </div>
+        </Router>
+      </ShipContext.Provider>
     </AuthContext.Provider>
   );
 }
