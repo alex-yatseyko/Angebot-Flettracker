@@ -31,19 +31,21 @@ export const Map = () => {
         console.log(fetched['hydra:member'])
         console.log(fetched['hydra:member'][1]) // Getting single ship example
         console.log(fetched['hydra:member'][1]['name']) // Getting Name Example
-        console.log(fetched['hydra:member'][1]['@id'].slice(11, 15)) // Getting of ID example
+        console.log('Ship ID', fetched['hydra:member'][1]['@id'].slice(11, 15)) // Getting of ID example
+        console.log('Schedule ID:', fetched['hydra:member'][1]['schedules'][0]['@id'].slice(11, 15)) // Getting schedule ID 
         console.log(fetched)
 
-        const arr = []
+        const shipIds = []
 
         function getIds(item, index) {
           console.log(index, ":", item) 
           console.log(`${index} id:`, item['@id'].slice(11, 15)) 
-          arr.push(item['@id'].slice(11, 15))
+          console.log(`${index} schedule id:`, item['schedules'][0]['@id'].slice(15, 19))
+          shipIds.push(item['@id'].slice(11, 15))
         }
         
         fetched['hydra:member'].forEach(getIds)
-        console.log('All Ids:', arr)
+        console.log('All Ids:', shipIds)
         
       } catch (e) {
         console.log('Error:', e)
