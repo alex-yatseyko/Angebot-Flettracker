@@ -27,8 +27,11 @@ export const Map = () => {
           Authorization: `Bearer ${token}`
         })
         setData2(fetched)
-        console.log(token)
+        // console.log(token)
         console.log(fetched['hydra:member'])
+        console.log(fetched['hydra:member'][1]) // Getting single ship example
+        console.log(fetched['hydra:member'][1]['name']) // Getting Name Example
+        console.log(fetched['hydra:member'][1]['@id'].slice(11, 15)) // Getting of ID example
         // console.log(data2)
       } catch (e) {
         console.log('Error:', e)

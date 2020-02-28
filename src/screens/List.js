@@ -6,6 +6,7 @@ import { AuthContext } from '../context/AuthContext'
 
 export const List = () => {
   const [ data2, setData2 ] = useState([])
+  const [ data3, setData3 ] = useState([])
     const [ships, setShips] = useState([
         {name: 'MV OCTOPUS', capt: 'A.Kirk', places: [], key: '1'},
         {name: 'MV TURTOISE', capt: 'J.Doe', places: [], key: '2'},
@@ -24,13 +25,13 @@ export const List = () => {
       const {loading, request} = useHttp()
       const {token} = useContext(AuthContext)
   
-      const fetchLinks = useCallback(async () => {
+      const fetchShips = useCallback(async () => {
         try {
           const fetched = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
             Authorization: `Bearer ${token}`
           })
           setData2(fetched)
-          console.log(token)
+          // console.log(token)
           console.log(fetched['hydra:member'])
           // console.log(data2)
         } catch (e) {
@@ -38,10 +39,26 @@ export const List = () => {
         }
       }, [token, request])
   
+      // const fetchLinks = useCallback(async () => {
+      //   try {
+      //     const fetched3 = await request('https://staging.api.app.fleettracker.de/api/future_schedule_entries', 'GET', null, {
+      //       Authorization: `Bearer ${token}`
+      //     })
+      //     setData3(fetched3)
+      //     console.log(token)
+      //     console.log(fetched3)
+      //     // console.log(data2)
+      //   } catch (e) {
+      //     console.log('Error:', e)
+      //   }
+      // }, [token, request])
+
       useEffect(() => {
-        fetchLinks()
+        fetchShips()
         console.log(data2)
-      }, [fetchLinks])
+        // fetchLinks()
+        // console.log(data3)
+      }, [fetchShips])
 
     return (
         <div>
