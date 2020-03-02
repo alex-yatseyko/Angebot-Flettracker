@@ -12,11 +12,6 @@ import { CSSTransition, TransitionGroup} from 'react-transition-group';
 export const useRoutes = isAuthenticated => {
     if(isAuthenticated) {
         return (
-            // <TransitionGroup>
-            // <CSSTransition 
-            //     timeout={300} 
-            //     classNames="fade"
-            //   >
                 <Switch>
                     <Route path="/map" exact>
                         <Map />
@@ -32,7 +27,6 @@ export const useRoutes = isAuthenticated => {
                     </Route>
                     <Redirect to="/map" />
                 </Switch>
-            {/* </CSSTransition></TransitionGroup> */}
         )
     }
 

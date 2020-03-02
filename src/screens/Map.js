@@ -93,23 +93,9 @@ export const Map = () => {
             <input type="text" className="headerInput" placeholder="Search Vessel or Ship Group..."/>
             {/* <div onClick={ fetchLinks } >Button</div> */}
             {shipsIds.map((i) => {
-              //  const fetchS = async () => {
-              //   try {
-              //     const fetched = await request(`https://staging.api.app.fleettracker.de/api/fixed_objects/${i}`, 'GET', null, {
-              //       Authorization: `Bearer ${token}`
-              //     })
-              //     console.log(fetched)
-              //     console.log(fetched['hydra:member'])
-              //   } catch (e) {
-              //     console.log('Error:', e)
-              //   }
-              // }
-
-              // fetchS()
-
               return(
               <p key={i}>
-                {i}
+                {/* {i} */}
               </p>
               )
             })}

@@ -55,18 +55,10 @@ export const AuthScreen = () => {
                 name="password"
                 onChange={ changeHandler }
             />
-            {/* <Button 
-                text="Login" 
-                path="/"
-                onClick={ loginHandler } 
-                disabled={ loading }
-            /> */}
-            {/* <Link to="#" className="btn"> */}
+
                 <div className="btn-primary" onClick={ loginHandler }>
                     Login
                 </div>
-            {/* </Link> */}
-            
         </div>
     )
 }
