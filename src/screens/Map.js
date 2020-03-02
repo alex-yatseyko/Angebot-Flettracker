@@ -4,10 +4,12 @@ import { Map as MainMap, TileLayer, Marker } from 'react-leaflet';
 import { useHttp } from '../hooks/http.hook'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../context/AuthContext'
+import { ShipContext } from '../context/ShipContext'
 
 // https://staging.api.app.fleettracker.de/api
 
 import {  iconShip  } from '../components/shipIcon';
+
 
 export const Map = () => {
     const [ data2, setData2 ] = useState([])

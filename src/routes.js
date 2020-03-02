@@ -7,14 +7,14 @@ import { Settings } from './screens/Settings'
 import { List } from './screens/List'
 import { DetailPage } from './screens/DetailPage'
 
-import { CSSTransition, TransitionGroup} from 'react-transition-group';
+// import { CSSTransition, TransitionGroup} from 'react-transition-group';
 
 export const useRoutes = isAuthenticated => {
     if(isAuthenticated) {
         return (
                 <Switch>
                     <Route path="/map" exact>
-                        <Map />
+                        <DetailPage />
                     </Route>
                     <Route path="/list" exact>
                         <List />
@@ -23,7 +23,7 @@ export const useRoutes = isAuthenticated => {
                         <Settings />
                     </Route>
                     <Route path="/ship/:id">
-                        <DetailPage />
+                        <Map />
                     </Route>
                     <Redirect to="/map" />
                 </Switch>
