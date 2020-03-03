@@ -14,16 +14,16 @@ export const useRoutes = isAuthenticated => {
         return (
                 <Switch>
                     <Route path="/map" exact>
-                        <DetailPage />
+                        <Map />
                     </Route>
                     <Route path="/list" exact>
                         <List />
                     </Route>
                     <Route path="/settings" exact>
-                        <Settings />
+                        <DetailPage />
                     </Route>
                     <Route path="/ship/:id">
-                        <Map />
+                        <Settings />
                     </Route>
                     <Redirect to="/map" />
                 </Switch>

@@ -12,17 +12,17 @@ import {  iconShip  } from '../components/shipIcon';
 
 
 export const Map = () => {
-    const [ data2, setData2 ] = useState([])
     const [ shipsIds, setShipsIds ] = useState([])
-    const [ markers, setMarkers ] = useState([
-      [51.522968, -0.108148],
-      [54.522968, -0.208148],
-      [49.771496, 23.971092], // Lviv
-      [51.771496, 26.971092],
-      [55.771496, 28.971092],
-      [45.771496, 10.971092],
-      [49.375225, 14.595445]
-    ]);
+    const [ markers, setMarkers ] = useState([])
+    // const [ markers, setMarkers ] = useState([
+    //   [51.522968, -0.108148],
+    //   [54.522968, -0.208148],
+    //   [49.771496, 23.971092], // Lviv
+    //   [51.771496, 26.971092],
+    //   [55.771496, 28.971092],
+    //   [45.771496, 10.971092],
+    //   [49.375225, 14.595445]
+    // ]);
     const {loading, request} = useHttp()
     const {token, isAuthenticated} = useContext(AuthContext)
 
@@ -31,24 +31,20 @@ export const Map = () => {
         const fetched = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
           Authorization: `Bearer ${token}`
         })
-        setData2(fetched)
-        // console.log(token)
-        console.log(fetched['hydra:member'])
-        console.log(fetched['hydra:member'][1]) // Getting single ship example
-        console.log(fetched['hydra:member'][1]['name']) // Getting Name Example
-        console.log('Ship ID', fetched['hydra:member'][1]['@id'].slice(11, 15)) // Getting of ID example
-        console.log('Schedule ID:', fetched['hydra:member'][1]['schedules'][0]['@id'].slice(11, 15)) // Getting schedule ID 
-        console.log(fetched)
-        console.log(isAuthenticated)
+
+        // console.log(fetched['hydra:member'])
+        // console.log(fetched['hydra:member'][1]) // Getting single ship example
+        // console.log(fetched['hydra:member'][1]['name']) // Getting Name Example
+        // console.log('Ship ID', fetched['hydra:member'][1]['@id'].slice(11, 15)) // Getting of ID example
+        // console.log('Schedule ID:', fetched['hydra:member'][1]['schedules'][0]['@id'].slice(11, 15)) // Getting schedule ID 
+        // console.log(fetched)
+        // console.log(isAuthenticated)
 
         const shipIds = []
         const scheduleIds = []
 
         function getIds(item, index) {
           const scheduleId= item['schedules'][0]['@id'].slice(15, 19)
-          console.log(index, ":", item) 
-          console.log(`${index} id:`, item['@id'].slice(11, 15)) 
-          console.log(`${index} schedule id:`, item['schedules'][0]['@id'].slice(15, 19))
           shipIds.push(item['@id'].slice(11, 15))
           scheduleIds.push(scheduleId)
         }
@@ -62,18 +58,88 @@ export const Map = () => {
       }
     }, [token, request])
 
+    const fetchIds = async () => {
+      try {
+          const fetched = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
+              Authorization: `Bearer ${token}`
+          })
+          const shipIds = []
+
+          const getIds = (item) => {
+              const idKey = item['@id'].slice(11, 15)
+              shipIds.push(idKey)
+          }
+
+          fetched['hydra:member'].forEach(getIds)
+
+          const fetchSingleShip = (url, _id) => {
+              fetch(`${url}${_id}`, {
+                  method: 'GET',
+                  headers: [
+                      ["Content-Type", "application/json"],
+                      ["Authorization", `Bearer ${token}`]
+                  ], 
+              }).then(res => res.json())
+                  // .then(data => console.log(data))
+                  // .then(data => fetchedmarkers.push(data))
+          }
+
+          const fetchedmarkers = []
+
+          for(let _id of shipIds) {
+            // console.log(_id)
+            fetch(`https://staging.api.app.fleettracker.de/api/ships/${_id}`, {
+              method: 'GET',
+              headers: [
+                ["Content-Type", "application/json"],
+                ["Authorization", `Bearer ${token}`]
+              ], 
+            }).then(res => res.json())
+            //
+            //
+            //
+            const fixedobjects = fetch(`https://staging.api.app.fleettracker.de/api/fixed_objects/${_id}`, {
+              method: 'GET',
+              headers: [
+                ["Content-Type", "application/json"],
+                ["Authorization", `Bearer ${token}`]
+              ], 
+            }).then(res => res.json())
+            .then(data => {
+              // console.log(data)
+              fetchedmarkers.push(data)
+              setMarkers(fetchedmarkers)
+              console.log(fetchedmarkers)
+            })
+  
+            // .then(res => console.log(res))
+            // 
+            //
+            //
+            // fetchSingleShip('https://staging.api.app.fleettracker.de/api/fixed_objects/', _id)
+          }
+          
+
+          // console.log('Markers:', markers)
+          // console.log('Single:', fetchSingleShip)
+
+
+      } catch (e) {
+          console.log('Error:', e)
+      }
+  }
+
     // https://staging.api.app.fleettracker.de/api/ships/1331
     // https://staging.api.app.fleettracker.de/api/fixed_objects/1334
 
     useEffect(() => {
       fetchLinks()
-      // console.log(data2)
+      fetchIds()
+      console.log('Markers:', markers)
     }, [fetchLinks])
 
     const hereCredentials = {
-        // Test API
-      // appId: '5mvG1nfdWF66X7RF3PsB',  
-      // apiKey: 'ptPpDquqCNnmE6FW7gUPz5ErHG-3TLLRZirSvOrxrHw',
+      // Test API   // appId: '5mvG1nfdWF66X7RF3PsB',    // apiKey: 'ptPpDquqCNnmE6FW7gUPz5ErHG-3TLLRZirSvOrxrHw',
       appId: 'T94boxXXrApFtc58WmGz',
       apiKey: 'aJYTveJijLx5bMV5Qt4-pXKHvbH9CblzqBiq3dRZRDA'
     }
@@ -84,9 +150,7 @@ export const Map = () => {
     ]
 
     const hereTileUrl = `https://1.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/${themes[0]}/{z}/{x}/{y}/256/png8?apiKey=${ hereCredentials.apiKey}&app_id=${hereCredentials.appId}`
-  
     const center = [51.522968, -0.108148]
-
     const zoom = 5;
 
     return (
@@ -117,9 +181,17 @@ export const Map = () => {
               markers.map((item, l) => {
                   return (
                       <Link key={l} style={{ transform: 'rotate(45deg)' }} to='/about'>
-                          <Marker style={{ transform: 'rotate(45deg)' }} position={ item } icon={ iconShip } rotate={'45deg'}>
-                          </Marker>
+                          {/* <Marker style={{ transform: 'rotate(45deg)' }} position={} icon={ iconShip } rotate={'45deg'}>
+                          </Marker> */}
+                          <p>{`${item.posx.toString().substring(0, item.posx.toString().length - 5)}.${
+                            item.posx.toString().substr(item.posx.toString().length - 5)
+                          }, ${item.posy.toString().substring(0, item.posy.toString().length - 5)}.${
+                            item.posy.toString().substr(item.posy.toString().length - 5)
+                          }`}</p>
                       </Link>
+                      // 51.522968, -0.108148
+
+                      // `${item.posx.slice(0, 2)}.${item.posx.slice(2, 15)}`, `${item.posy.slice(0, 2)}.${item.posy.slice(2, 15)}`
                   )
               })
             }
