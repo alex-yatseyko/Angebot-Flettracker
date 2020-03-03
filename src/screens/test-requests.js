@@ -91,11 +91,6 @@ export const DetailPage = () => {
     }/*, [token, request]) */
 
 
-    const TestIds = [
-        '1926',
-        // '3353'
-    ]
-
     const fetchSingleShip2 = useCallback(
         async function getShip() {
             let ships = []
