@@ -31,14 +31,10 @@ export const Map = () => {
         const fetched = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
           Authorization: `Bearer ${token}`
         })
-
         // console.log(fetched['hydra:member'])
-        // console.log(fetched['hydra:member'][1]) // Getting single ship example
         // console.log(fetched['hydra:member'][1]['name']) // Getting Name Example
         // console.log('Ship ID', fetched['hydra:member'][1]['@id'].slice(11, 15)) // Getting of ID example
         // console.log('Schedule ID:', fetched['hydra:member'][1]['schedules'][0]['@id'].slice(11, 15)) // Getting schedule ID 
-        // console.log(fetched)
-        // console.log(isAuthenticated)
 
         const shipIds = []
         const scheduleIds = []
