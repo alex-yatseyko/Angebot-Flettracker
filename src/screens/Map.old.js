@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useContext, useCallback, useEffect } from 'react'
-import { Map as MainMap, TileLayer, Marker, MapEvented } from 'react-leaflet';
+import { Map as MainMap, TileLayer, Marker } from 'react-leaflet';
 // import plane from '../assets/paper-plane.svg';
 import { useHttp } from '../hooks/http.hook'
 import { Link } from 'react-router-dom'
@@ -9,7 +9,6 @@ import { ShipContext } from '../context/ShipContext'
 // https://staging.api.app.fleettracker.de/api
 
 import {  iconShip  } from '../components/shipIcon';
-import { marker } from 'leaflet';
 
 export const Map = () => {
     const [ shipsIds, setShipsIds ] = useState([])
@@ -35,6 +34,34 @@ export const Map = () => {
     // ]);
     const {loading, request} = useHttp()
     const {token, isAuthenticated} = useContext(AuthContext)
+
+    const fetchLinks = useCallback(async () => {
+      try {
+        const fetched = await request('https://staging.api.app.fleettracker.de/api/ships', 'GET', null, {
+          Authorization: `Bearer ${token}`
+        })
+        // console.log(fetched['hydra:member'])
+        // console.log(fetched['hydra:member'][1]['name']) // Getting Name Example
+        // console.log('Ship ID', fetched['hydra:member'][1]['@id'].slice(11, 15)) // Getting of ID example
+        // console.log('Schedule ID:', fetched['hydra:member'][1]['schedules'][0]['@id'].slice(11, 15)) // Getting schedule ID 
+
+        const shipIds = []
+        const scheduleIds = []
+
+        function getIds(item, index) {
+          const scheduleId= item['schedules'][0]['@id'].slice(15, 19)
+          shipIds.push(item['@id'].slice(11, 15))
+          scheduleIds.push(scheduleId)
+        }
+        
+        fetched['hydra:member'].forEach(getIds)
+        console.log('Ship Ids:', shipIds)
+        console.log('Schedule Ids:', scheduleIds)
+        setShipsIds(shipIds)
+      } catch (e) {
+        console.log('Error:', e)
+      }
+    }, [token, request])
 
     const fetchIds = async () => {
       try {
@@ -82,33 +109,30 @@ export const Map = () => {
               ], 
             }).then(res => res.json())
             .then(data => {
-              console.log(data)
               fetchedmarkers.push(data)
               setMarkers(fetchedmarkers)
-              console.log('Coords are here', fetchedmarkers)
+              console.log(fetchedmarkers)
             })
+  
+            // .then(res => console.log(res))
+            // 
+            // fetchSingleShip('https://staging.api.app.fleettracker.de/api/fixed_objects/', _id)
           }
 
+          // console.log('Markers:', markers)
+          // console.log('Single:', fetchSingleShip)
 
 
       } catch (e) {
-        console.log('Error:', e)
+          console.log('Error:', e)
       }
-    }
-    
-    useEffect(() => {
-      if(markers.length === 30) {
-        return
-      }
-      // fetchLinks()
-      fetchIds()
-      console.log(markers.length)
-  }, [markers])
+  }
   
-  // useEffect(() => {
-  //   // console.log(...markers)
-  // }, [markers])
-
+  useEffect(() => {
+    fetchLinks()
+    fetchIds()
+  }, [fetchLinks])
+  
   const hereCredentials = {
     // Test API   // appId: '5mvG1nfdWF66X7RF3PsB',    // apiKey: 'ptPpDquqCNnmE6FW7gUPz5ErHG-3TLLRZirSvOrxrHw',
     appId: 'T94boxXXrApFtc58WmGz',
@@ -141,16 +165,21 @@ export const Map = () => {
             zoom={zoom}
             >  
             <TileLayer
+              // attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               url={ hereTileUrl }
               />
+
             {
-              markers.length > 0 ?
               markers.map((i) => {
                 return(
                 <p className="Test coords" key={i.posx}>{i.posx} {i.posy}</p>
                 )
-              }) : <p className="Test coords" key="2">test</p>
+              })
             }
+
+
+
             {
               markers.map((item, l) => {
                 return (
