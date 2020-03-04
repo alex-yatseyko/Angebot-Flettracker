@@ -1,4 +1,4 @@
-import React, { useState, useContext, useCallback, useEffect } from 'react'
+import React, { Fragment, useState, useContext, useCallback, useEffect } from 'react'
 import { Map as MainMap, TileLayer, Marker } from 'react-leaflet';
 // import plane from '../assets/paper-plane.svg';
 import { useHttp } from '../hooks/http.hook'
@@ -91,9 +91,7 @@ export const Map = () => {
                 ["Authorization", `Bearer ${token}`]
               ], 
             }).then(res => res.json())
-            //
-            //
-            //
+       
             const fixedobjects = fetch(`https://staging.api.app.fleettracker.de/api/fixed_objects/${_id}`, {
               method: 'GET',
               headers: [
@@ -176,18 +174,22 @@ export const Map = () => {
             {
               markers.map((item, l) => {
                   return (
+                  <div key={l}>
                       <Link key={l} style={{ transform: 'rotate(45deg)' }} to='/about'>
                           {/* <Marker style={{ transform: 'rotate(45deg)' }} position={} icon={ iconShip } rotate={'45deg'}>
                           </Marker> */}
-                          <p>{`${item.posx.toString().substring(0, item.posx.toString().length - 5)}.${
+                      </Link>
+                          <p className="coords">{`${item.posx.toString().substring(0, item.posx.toString().length - 5)}.${
                             item.posx.toString().substr(item.posx.toString().length - 5)
                           }, ${item.posy.toString().substring(0, item.posy.toString().length - 5)}.${
                             item.posy.toString().substr(item.posy.toString().length - 5)
                           }`}</p>
-                      </Link>
+                           </div>
                       // 51.522968, -0.108148
 
                       // `${item.posx.slice(0, 2)}.${item.posx.slice(2, 15)}`, `${item.posy.slice(0, 2)}.${item.posy.slice(2, 15)}`
+
+                 
                   )
               })
             }

@@ -30,3 +30,10 @@ body > div {
   overflow-y: auto;
   height: 100%;
 }
+.coords {
+  position: absolute;
+  z-index: 9999999999;
+  text-align: center;
+  margin-top: 4rem;
+  width: 100%;
+}
